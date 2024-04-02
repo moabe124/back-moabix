@@ -1,0 +1,6 @@
+@moabix_HostAddress = http://localhost:5036
+
+GET {{moabix_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
