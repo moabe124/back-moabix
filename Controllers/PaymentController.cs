@@ -8,8 +8,8 @@ namespace moabix.Controllers
     [Route("[controller]")]
     public class PaymentController : Controller
     {
-        public readonly IPaymentsManager _paymentsManager;
-        public PaymentController(IPaymentsManager rabbitManager) {
+        public readonly IPaymentsQueueManager _paymentsManager;
+        public PaymentController(IPaymentsQueueManager rabbitManager) {
             _paymentsManager = rabbitManager;
         }
 

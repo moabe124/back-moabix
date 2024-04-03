@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Connections;
+using Microsoft.Extensions.Configuration;
 using moabix.Models;
 using moabix.Repositories.Payments;
 using Newtonsoft.Json;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace moabix.Services.QueueManager
 {
-    public class PaymentsManager : IPaymentsManager
+    public class RabbitMQManager : IPaymentsQueueManager
     {
         private readonly ConnectionFactory _factory;
         private readonly IConnection _connection;
@@ -16,14 +17,15 @@ namespace moabix.Services.QueueManager
         private readonly string _queueName;
         private IPaymentsRepo _paymentsRepo;
 
-        public PaymentsManager(string hostName, string queueName, IPaymentsRepo paymentsRepo)
+        public RabbitMQManager(IPaymentsRepo paymentsRepo, IConfiguration configuration)
         {
+            var rabbitMQConfig = configuration.GetSection("RabbitMQ").Get<RabbitMQConfiguration>();
             _factory = new ConnectionFactory();
             // TODO pass user and password to user secrets, default will be admin/admin
-            _factory.Uri = new Uri($"amqp://admin:admin@{hostName}:5672/");
+            _factory.Uri = new Uri($"amqp://admin:admin@{rabbitMQConfig.HostName}:5672/");
             _connection = _factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _queueName = queueName;
+            _queueName = rabbitMQConfig.QueueName;
             _paymentsRepo = paymentsRepo;
 
             ConsumeMessages();

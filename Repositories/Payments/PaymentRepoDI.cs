@@ -1,11 +1,5 @@
-﻿using moabix.Services.QueueManager;
-
-namespace moabix.Repositories.Payments
+﻿namespace moabix.Repositories.Payments
 {
-    using Amazon;
-    using Amazon.DynamoDBv2;
-    using Amazon.DynamoDBv2.DataModel;
-    using Amazon.Runtime;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -13,14 +7,7 @@ namespace moabix.Repositories.Payments
     {
         public static void RegisterPaymentRepo(this IServiceCollection services, IConfiguration configuration)
         {
-            var dynamoDBConfig = configuration.GetSection("DynamoDB").Get<DynamoDBConfiguration>();
-
-            Console.WriteLine(dynamoDBConfig.ToString());
-
-            services.AddTransient<IPaymentsRepo, PaymentsRepo>(provider =>
-            {
-                return new PaymentsRepo(dynamoDBConfig.TableName);
-            });
+            services.AddTransient<IPaymentsRepo, PaymentsRepo>();
         }
     }
 

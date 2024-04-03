@@ -2,7 +2,7 @@
 
 namespace moabix.Services.QueueManager
 {
-    public interface IPaymentsManager
+    public interface IPaymentsQueueManager
     {
         void PublishPayment(Payment payment);
 

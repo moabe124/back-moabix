@@ -8,21 +8,51 @@
     {
         public static void RegisterRabbitMQService(this IServiceCollection services, IConfiguration configuration)
         {
-            var rabbitMQConfig = configuration.GetSection("RabbitMQ").Get<RabbitMQConfiguration>();
 
-            Console.WriteLine(rabbitMQConfig.ToString());
 
-            services.AddTransient<IPaymentsManager, PaymentsManager>(provider =>
+
+            var queueProvider = configuration["QueueProvider"];
+
+
+            if (queueProvider == null)
             {
-                var IPaymentsRepo = provider.GetService<IPaymentsRepo>();
-                return new PaymentsManager(rabbitMQConfig.HostName, rabbitMQConfig.QueueName, IPaymentsRepo);
-            });
+                throw new Exception("Queue provider não configurado.");
+            }
+
+            if (queueProvider.Equals(QueueType.SQS.ToString()))
+            {
+                services.AddSingleton<IPaymentsQueueManager, SQSManager>();
+
+            }
+            else if (queueProvider.Equals(QueueType.RABBITMQ.ToString()))
+            {
+                services.AddTransient<IPaymentsQueueManager, RabbitMQManager>();
+            }
+
+
         }
+    }
+
+    public enum QueueType
+    {
+        SQS,
+        RABBITMQ
     }
 
     public class RabbitMQConfiguration
     {
         public string HostName { get; set; }
         public string QueueName { get; set; }
+    }
+
+    public class SQSConfiguration
+    {
+        public string QueueUrl { get; set; }
+    }
+
+    public class AWSAUTH
+    {
+        public string accessKey { get; set; }
+        public string secretKey { get; set; }
     }
 }

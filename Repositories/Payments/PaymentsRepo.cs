@@ -3,7 +3,9 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.Runtime;
+using Microsoft.Extensions.Configuration;
 using moabix.Models;
+using moabix.Services.QueueManager;
 
 namespace moabix.Repositories.Payments
 {
@@ -12,12 +14,15 @@ namespace moabix.Repositories.Payments
         private IAmazonDynamoDB _client;
         private DynamoDBContext _context;
         private readonly string? _tableName = null;
+        private readonly IConfiguration _configuration;
 
-        public PaymentsRepo(string tableName)
+        public PaymentsRepo(IConfiguration configuration)
         {
-            _tableName = tableName;
-            // TODO pass those credentials to user secrets
-            var credentials = new BasicAWSCredentials();
+            var dynamoDBConfig = configuration.GetSection("DynamoDB").Get<DynamoDBConfiguration>();
+
+            _tableName = dynamoDBConfig.TableName;
+            var authKeys = configuration.GetSection("AWSAUTH").Get<AWSAUTH>();
+            var credentials = new BasicAWSCredentials(authKeys.accessKey, authKeys.secretKey);
             var client = new AmazonDynamoDBClient(credentials, RegionEndpoint.USEast1);
             _client = client;
             _context = new DynamoDBContext(client);
@@ -31,7 +36,6 @@ namespace moabix.Repositories.Payments
             }
             catch (Exception e)
             {
-
                 throw e;
             }
             
