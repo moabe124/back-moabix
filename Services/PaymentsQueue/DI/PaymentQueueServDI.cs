@@ -1,18 +1,16 @@
-﻿namespace moabix.Services.QueueManager
+﻿namespace moabix.Services.PaymentsQueue.DI
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using moabix.Repositories.Payments;
+    using moabix.Services.PaymentsQueue.RabbitMQ;
+    using moabix.Services.PaymentsQueue.SQSProvider;
 
     public static class RabbitMQServiceRegistration
     {
-        public static void RegisterRabbitMQService(this IServiceCollection services, IConfiguration configuration)
+        public static void AddPaymentQueueServ(this IServiceCollection services, IConfiguration configuration)
         {
 
-
-
             var queueProvider = configuration["QueueProvider"];
-
 
             if (queueProvider == null)
             {
@@ -21,14 +19,13 @@
 
             if (queueProvider.Equals(QueueType.SQS.ToString()))
             {
-                services.AddSingleton<IPaymentsQueueManager, SQSManager>();
+                services.AddSingleton<IPaymentsQueueServ, SQSManager>();
 
             }
             else if (queueProvider.Equals(QueueType.RABBITMQ.ToString()))
             {
-                services.AddTransient<IPaymentsQueueManager, RabbitMQManager>();
+                services.AddTransient<IPaymentsQueueServ, RabbitMQProvider>();
             }
-
 
         }
     }

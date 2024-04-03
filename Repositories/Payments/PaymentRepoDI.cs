@@ -5,7 +5,7 @@
 
     public static class PaymentRepoDI
     {
-        public static void RegisterPaymentRepo(this IServiceCollection services, IConfiguration configuration)
+        public static void AddPaymentRepo(this IServiceCollection services)
         {
             services.AddTransient<IPaymentsRepo, PaymentsRepo>();
         }

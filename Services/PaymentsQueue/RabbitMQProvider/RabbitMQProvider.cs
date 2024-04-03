@@ -2,14 +2,15 @@
 using Microsoft.Extensions.Configuration;
 using moabix.Models;
 using moabix.Repositories.Payments;
+using moabix.Services.PaymentsQueue.DI;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 
-namespace moabix.Services.QueueManager
+namespace moabix.Services.PaymentsQueue.RabbitMQ
 {
-    public class RabbitMQManager : IPaymentsQueueManager
+    public class RabbitMQProvider : IPaymentsQueueServ
     {
         private readonly ConnectionFactory _factory;
         private readonly IConnection _connection;
@@ -17,7 +18,7 @@ namespace moabix.Services.QueueManager
         private readonly string _queueName;
         private IPaymentsRepo _paymentsRepo;
 
-        public RabbitMQManager(IPaymentsRepo paymentsRepo, IConfiguration configuration)
+        public RabbitMQProvider(IPaymentsRepo paymentsRepo, IConfiguration configuration)
         {
             var rabbitMQConfig = configuration.GetSection("RabbitMQ").Get<RabbitMQConfiguration>();
             _factory = new ConnectionFactory();
@@ -98,6 +99,11 @@ namespace moabix.Services.QueueManager
         public void CleanPaymentQueue()
         {
             _channel.QueuePurge(_queueName);
+        }
+
+        public void StartMessageConsumer()
+        {
+            throw new NotImplementedException();
         }
     }
 }

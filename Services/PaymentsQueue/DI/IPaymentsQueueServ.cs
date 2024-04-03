@@ -1,11 +1,12 @@
 ﻿using moabix.Models;
 
-namespace moabix.Services.QueueManager
+namespace moabix.Services.PaymentsQueue.DI
 {
-    public interface IPaymentsQueueManager
+    public interface IPaymentsQueueServ
     {
         void PublishPayment(Payment payment);
 
+        void StartMessageConsumer();
         void CleanPaymentQueue();
     }
 }

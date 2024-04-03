@@ -1,10 +1,8 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Amazon.Runtime.SharedInterfaces;
 using Amazon.SQS;
-using Microsoft.Extensions.Configuration;
 using moabix.Repositories.Payments;
-using moabix.Services.QueueManager;
+using moabix.Services.PaymentsQueue.DI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +16,8 @@ builder.Services.AddAWSService<IAmazonSQS>();
 builder.Services.AddScoped<IDynamoDBContext, DynamoDBContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.RegisterPaymentRepo(builder.Configuration);
-builder.Services.RegisterRabbitMQService(builder.Configuration);
+builder.Services.AddPaymentRepo();
+builder.Services.AddPaymentQueueServ(builder.Configuration);
 
 
 var app = builder.Build();

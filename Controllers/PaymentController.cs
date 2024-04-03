@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using moabix.Models;
-using moabix.Services.QueueManager;
+using moabix.Services.PaymentsQueue.DI;
 
 namespace moabix.Controllers
 {
@@ -8,8 +8,8 @@ namespace moabix.Controllers
     [Route("[controller]")]
     public class PaymentController : Controller
     {
-        public readonly IPaymentsQueueManager _paymentsManager;
-        public PaymentController(IPaymentsQueueManager rabbitManager) {
+        public readonly IPaymentsQueueServ _paymentsManager;
+        public PaymentController(IPaymentsQueueServ rabbitManager) {
             _paymentsManager = rabbitManager;
         }
 

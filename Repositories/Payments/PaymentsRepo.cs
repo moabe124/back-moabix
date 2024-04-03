@@ -5,7 +5,7 @@ using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.Runtime;
 using Microsoft.Extensions.Configuration;
 using moabix.Models;
-using moabix.Services.QueueManager;
+using moabix.Services.PaymentsQueue.DI;
 
 namespace moabix.Repositories.Payments
 {
