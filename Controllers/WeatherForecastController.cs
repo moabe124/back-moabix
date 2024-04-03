@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using moabix.QueueManager;
 
 namespace moabix.Controllers
 {

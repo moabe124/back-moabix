@@ -1,7 +1,8 @@
-﻿namespace moabix.QueueManager
+﻿namespace moabix.Services.QueueManager
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using moabix.Repositories.Payments;
 
     public static class RabbitMQServiceRegistration
     {
@@ -11,9 +12,10 @@
 
             Console.WriteLine(rabbitMQConfig.ToString());
 
-            services.AddTransient<IRabbitManager, RabbitManager>(provider =>
+            services.AddTransient<IPaymentsManager, PaymentsManager>(provider =>
             {
-                return new RabbitManager(rabbitMQConfig.HostName, rabbitMQConfig.QueueName);
+                var IPaymentsRepo = provider.GetService<IPaymentsRepo>();
+                return new PaymentsManager(rabbitMQConfig.HostName, rabbitMQConfig.QueueName, IPaymentsRepo);
             });
         }
     }
